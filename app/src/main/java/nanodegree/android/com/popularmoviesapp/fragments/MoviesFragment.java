@@ -47,14 +47,14 @@ public class MoviesFragment extends Fragment{
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_popular_movies, container, false);
         moviesGridView = (GridView) rootView.findViewById(R.id.moviesGridView);
-        /*Ion.with(getActivity())
+        Ion.with(getActivity())
                 .load(MOVIES_API_LINK+API_KEY)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
 
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        JsonArray movies = result.getAsJsonArray("result");
+                        JsonArray movies = result.getAsJsonArray("results");
                         List mymovies = new ArrayList<Movie>();
 
                         for(JsonElement movie: movies){
@@ -70,8 +70,8 @@ public class MoviesFragment extends Fragment{
                         movieAdapter.notifyDataSetChanged();
                     }
                 });
-        */
-        ///nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
+
+       /* ///nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
         List mymovies = new ArrayList<Movie>();
         mymovies.add(new Movie("1","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
         mymovies.add(new Movie("2","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
@@ -84,7 +84,7 @@ public class MoviesFragment extends Fragment{
 
         movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
         moviesGridView.setAdapter(movieAdapter);
-        movieAdapter.notifyDataSetChanged();
+        movieAdapter.notifyDataSetChanged();*/
 
         return rootView;
     }

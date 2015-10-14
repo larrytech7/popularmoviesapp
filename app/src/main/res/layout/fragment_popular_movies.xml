@@ -1,18 +1,36 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PopularMoviesActivity$PlaceholderFragment"
+    tools:context=".MoviesFragment"
+    android:orientation="vertical"
     android:padding="5dp"
     android:useDefaultMargins="true">
 
 
-    <GridView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/moviesGridView"
+        android:id="@+id/searchTextview"
         android:layout_row="15"
         android:layout_column="5"
-        android:numColumns="auto_fit" />
+        android:editable="true"
+        android:focusable="true"
+        android:hint="@string/searchtext"
+        android:lines="1" />
 
-</GridLayout>
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/moviesGridView"
+        android:layout_row="16"
+        android:layout_column="5"
+        android:numColumns="auto_fit"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:layout_rowWeight="1"
+        android:background="#ddd"
+        android:fastScrollEnabled="true"
+        android:stretchMode="columnWidth" />
+
+</LinearLayout>
