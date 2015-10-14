@@ -92,7 +92,25 @@ public class Movie implements Parcelable{
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeLong(movie_id);
+        parcel.writeString(movie_poster_url);
+        parcel.writeString(movie_title);
+        parcel.writeString(movie_overview);
+        parcel.writeFloat(movie_rating);
+        parcel.writeString(movie_release_date);
     }
+
+    static final Creator<Movie> MOVIE_CREATOR = new Creator<Movie>(){
+
+        @Override
+        public Movie createFromParcel(Parcel parcel) {
+            return new Movie(parcel);
+        }
+
+        @Override
+        public Movie[] newArray(int i) {
+            return new Movie[0];
+        }
+    };
 }

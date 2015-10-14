@@ -1,12 +1,15 @@
 package nanodegree.android.com.popularmoviesapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,6 +20,7 @@ import com.koushikdutta.ion.Ion;
 import java.util.ArrayList;
 import java.util.List;
 
+import nanodegree.android.com.popularmoviesapp.PopularMoviesActivity;
 import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
@@ -70,22 +74,28 @@ public class MoviesFragment extends Fragment{
                         movieAdapter.notifyDataSetChanged();
                     }
                 });
-
-       /* ///nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
-        List mymovies = new ArrayList<Movie>();
-        mymovies.add(new Movie("1","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("2","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("3","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("4","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("1","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("2","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("3","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-        mymovies.add(new Movie("4","/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", "xyz","xyz","2.5","2014-10-10"));
-
-        movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
-        moviesGridView.setAdapter(movieAdapter);
-        movieAdapter.notifyDataSetChanged();*/
-
         return rootView;
+    }
+
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to Activity of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Movie mv = (Movie) adapterView.getItemAtPosition(position);
+                Intent detailIntent = new Intent();
+                detailIntent.putExtra("moviedetails", mv);
+                //detailIntent.setClass(getActivity(), PopularMoviesActivity.class);
+                //startActivity(detailIntent);
+                Toast.makeText(getActivity(), ""+mv.getMovie_title(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

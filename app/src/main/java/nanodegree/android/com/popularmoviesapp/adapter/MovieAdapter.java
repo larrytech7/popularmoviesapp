@@ -35,6 +35,11 @@ public class MovieAdapter extends ArrayAdapter<Movie>{
     }
 
     @Override
+    public Movie getItem(int position) {
+        return movieList.get(position);
+    }
+
+    @Override
     public int getCount() {
         return this.movieList.size();
     }
@@ -47,7 +52,7 @@ public class MovieAdapter extends ArrayAdapter<Movie>{
         Movie movie = this.movieList.get(position);
         ImageView imageposter = (ImageView) convertView.findViewById(R.id.movie_poster);
         Picasso.with(this.datacontext)
-                .load(POSTER_URL+movie.getMovie_poster_url())
+                .load(POSTER_URL + movie.getMovie_poster_url())
                 .resize(280, 300)
                 .placeholder(R.mipmap.image_loading)
                 .error(R.mipmap.err_image)
