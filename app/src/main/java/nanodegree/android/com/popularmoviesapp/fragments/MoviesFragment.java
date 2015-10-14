@@ -58,11 +58,11 @@ public class MoviesFragment extends Fragment{
                         List mymovies = new ArrayList<Movie>();
 
                         for(JsonElement movie: movies){
-                            mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsString(),
+                            mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
                                     movie.getAsJsonObject().get("poster_path").getAsString(),
                                     movie.getAsJsonObject().get("original_title").getAsString(),
                                     movie.getAsJsonObject().get("overview").getAsString(),
-                                    movie.getAsJsonObject().get("vote_average").getAsString(),
+                                    movie.getAsJsonObject().get("vote_average").getAsFloat(),
                                     movie.getAsJsonObject().get("release_date").getAsString()));
                         }
                         movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
