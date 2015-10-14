@@ -27,7 +27,7 @@
                 android:layout_marginTop="20dp"
                 android:shadowColor="@color/background_floating_material_light"
                 android:hint="@string/mvtitle"
-                android:textColor="@color/ripple_material_light"
+                android:textColor="#eee"
                 android:typeface="serif"
                 android:width="18dp" />
         </LinearLayout>
