@@ -36,6 +36,7 @@ public class Movie implements Parcelable{
         this.movie_overview = parcel.readString();
         this.movie_rating = parcel.readFloat();
         this.movie_release_date = parcel.readString();
+
     }
 
     public long getMovie_id() {
@@ -101,7 +102,7 @@ public class Movie implements Parcelable{
         parcel.writeString(movie_release_date);
     }
 
-    static final Creator<Movie> MOVIE_CREATOR = new Creator<Movie>(){
+    public static final Creator<Movie> CREATOR = new Creator<Movie>(){
 
         @Override
         public Movie createFromParcel(Parcel parcel) {
@@ -110,7 +111,7 @@ public class Movie implements Parcelable{
 
         @Override
         public Movie[] newArray(int i) {
-            return new Movie[0];
+            return new Movie[i];
         }
     };
 }

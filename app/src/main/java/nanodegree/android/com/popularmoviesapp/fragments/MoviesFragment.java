@@ -2,6 +2,7 @@ package nanodegree.android.com.popularmoviesapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.koushikdutta.ion.Ion;
 import java.util.ArrayList;
 import java.util.List;
 
+import nanodegree.android.com.popularmoviesapp.DetailsActivity;
 import nanodegree.android.com.popularmoviesapp.PopularMoviesActivity;
 import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
@@ -90,11 +92,11 @@ public class MoviesFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Movie mv = (Movie) adapterView.getItemAtPosition(position);
-                Intent detailIntent = new Intent();
-                detailIntent.putExtra("moviedetails", mv);
-                //detailIntent.setClass(getActivity(), PopularMoviesActivity.class);
-                //startActivity(detailIntent);
-                Toast.makeText(getActivity(), ""+mv.getMovie_title(), Toast.LENGTH_LONG).show();
+                mv.writeToParcel(Parcel.obtain(), 0);
+                Intent detailIntent = new Intent(getActivity(), DetailsActivity.class);
+                detailIntent.putExtra("nanodegree.android.com.popularmoviesapp.model.Movie", mv);
+                startActivity(detailIntent);
+                //Toast.makeText(getActivity(), ""+mv.getMovie_title(), Toast.LENGTH_LONG).show();
             }
         });
     }
