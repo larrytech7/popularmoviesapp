@@ -3,7 +3,6 @@ package nanodegree.android.com.popularmoviesapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nanodegree.android.com.popularmoviesapp.DetailsActivity;
-import nanodegree.android.com.popularmoviesapp.PopularMoviesActivity;
 import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
@@ -37,7 +34,8 @@ public class MoviesFragment extends Fragment{
     private MovieAdapter movieAdapter;
     private View rootView;
     private static final String API_KEY = "76183055a219f7917ab7b2e71f9cada1";
-    private static final String MOVIES_API_LINK = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=";
+    private enum API_REQUEST {POPULARITY, RATING};
+    private static final String MOVIES_API_LINK = "http://api.themoviedb.org/3/discover/movie?sort_by=";
 
     public MoviesFragment newInstance(String param1){
         Bundle dataBundle = new Bundle();
@@ -61,7 +59,7 @@ public class MoviesFragment extends Fragment{
         rootView = inflater.inflate(R.layout.fragment_popular_movies, container, false);
         moviesGridView = (GridView) rootView.findViewById(R.id.moviesGridView);
         Ion.with(getActivity())
-                .load(MOVIES_API_LINK+API_KEY)
+                .load(this.buildApiRequest(API_REQUEST.POPULARITY))
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
 
@@ -113,7 +111,7 @@ public class MoviesFragment extends Fragment{
         switch (item.getItemId()){
             case R.id.mrated:
                 Ion.with(getActivity())
-                        .load(MOVIES_API_LINK+API_KEY)
+                        .load(this.buildApiRequest(API_REQUEST.RATING))
                         .asJsonObject()
                         .setCallback(new FutureCallback<JsonObject>() {
 
@@ -132,13 +130,14 @@ public class MoviesFragment extends Fragment{
                                 }
                                 movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
                                 moviesGridView.setAdapter(movieAdapter);
+
                                 movieAdapter.notifyDataSetChanged();
                             }
                         });
                 return true;
             case R.id.mpopular:
                 Ion.with(getActivity())
-                        .load(MOVIES_API_LINK+API_KEY)
+                        .load(this.buildApiRequest(API_REQUEST.POPULARITY))
                         .asJsonObject()
                         .setCallback(new FutureCallback<JsonObject>() {
 
@@ -163,5 +162,15 @@ public class MoviesFragment extends Fragment{
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String buildApiRequest(API_REQUEST request){
+        if(API_REQUEST.POPULARITY == request){
+            return MOVIES_API_LINK+"popularity.desc&api_key="+API_KEY;
+        }else if (API_REQUEST.RATING == request){
+            return MOVIES_API_LINK+"vote_average.desc&certification_country=US&certification=R&api_key="+API_KEY;
+        }
+
+        return "";
     }
 }

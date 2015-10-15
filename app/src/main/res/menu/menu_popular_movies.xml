@@ -5,9 +5,9 @@
     <item android:id="@+id/mpopular"
         android:title="@string/mostpopular"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item android:id="@+id/mrated"
         android:title="@string/mostrated"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>
