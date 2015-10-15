@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import nanodegree.android.com.popularmoviesapp.fragments.MoviesFragment;
 
-
 public class PopularMoviesActivity extends ActionBarActivity {
 
     @Override
@@ -24,7 +23,7 @@ public class PopularMoviesActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_popular_movies, menu);
+        getMenuInflater().inflate(R.menu.menu_popular_movies, menu);
         return true;
     }
 

@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -46,6 +47,12 @@ public class MoviesFragment extends Fragment{
     }
 
     public MoviesFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -99,5 +106,62 @@ public class MoviesFragment extends Fragment{
                 //Toast.makeText(getActivity(), ""+mv.getMovie_title(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mrated:
+                Ion.with(getActivity())
+                        .load(MOVIES_API_LINK+API_KEY)
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                JsonArray movies = result.getAsJsonArray("results");
+                                List mymovies = new ArrayList<Movie>();
+
+                                for(JsonElement movie: movies){
+                                    mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                            movie.getAsJsonObject().get("poster_path").getAsString(),
+                                            movie.getAsJsonObject().get("original_title").getAsString(),
+                                            movie.getAsJsonObject().get("overview").getAsString(),
+                                            movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                            movie.getAsJsonObject().get("release_date").getAsString()));
+                                }
+                                movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                                moviesGridView.setAdapter(movieAdapter);
+                                movieAdapter.notifyDataSetChanged();
+                            }
+                        });
+                return true;
+            case R.id.mpopular:
+                Ion.with(getActivity())
+                        .load(MOVIES_API_LINK+API_KEY)
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                JsonArray movies = result.getAsJsonArray("results");
+                                List mymovies = new ArrayList<Movie>();
+
+                                for(JsonElement movie: movies){
+                                    mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                            movie.getAsJsonObject().get("poster_path").getAsString(),
+                                            movie.getAsJsonObject().get("original_title").getAsString(),
+                                            movie.getAsJsonObject().get("overview").getAsString(),
+                                            movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                            movie.getAsJsonObject().get("release_date").getAsString()));
+                                }
+                                movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                                moviesGridView.setAdapter(movieAdapter);
+                                movieAdapter.notifyDataSetChanged();
+                            }
+                        });
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
