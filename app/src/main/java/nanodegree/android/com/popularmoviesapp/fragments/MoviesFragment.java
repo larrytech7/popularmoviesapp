@@ -33,7 +33,7 @@ public class MoviesFragment extends Fragment{
     private GridView moviesGridView;
     private MovieAdapter movieAdapter;
     private View rootView;
-    private static final String API_KEY = "API_KEY_HERE";
+    private static final String API_KEY = "76183055a219f7917ab7b2e71f9cada1";
     private enum API_REQUEST {POPULARITY, RATING};
     private static final String MOVIES_API_LINK = "http://api.themoviedb.org/3/discover/movie?sort_by=";
 
