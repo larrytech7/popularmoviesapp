@@ -41,13 +41,13 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/moviePosterImage"
-                android:layout_weight="1" />
+                android:id="@+id/moviePosterImage" />
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -56,10 +56,17 @@
                     android:id="@+id/movieReleaseDate" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New Text"
                     android:id="@+id/movieRating" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/favoriteButton"
+                    android:src="@android:drawable/star_off"
+                    android:background="#eee" />
             </LinearLayout>
         </LinearLayout>
 
@@ -70,6 +77,13 @@
             android:text="Overview"
             android:id="@+id/movieOverview"
             android:layout_margin="5dp" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trailerListView"
+            android:dividerHeight="1dp"
+            android:divider="#fbe" />
 
     </LinearLayout>
 </ScrollView>
