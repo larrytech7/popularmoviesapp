@@ -10,4 +10,7 @@
         android:title="@string/mostrated"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/favorited"
+        android:title="@string/favorites"
+        app:showAsAction="never" />
 </menu>

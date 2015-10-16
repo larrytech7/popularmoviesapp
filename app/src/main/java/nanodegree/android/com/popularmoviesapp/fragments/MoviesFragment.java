@@ -3,6 +3,7 @@ package nanodegree.android.com.popularmoviesapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -65,20 +67,26 @@ public class MoviesFragment extends Fragment{
 
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        JsonArray movies = result.getAsJsonArray("results");
-                        List mymovies = new ArrayList<Movie>();
+                        if( result != null) {
+                            JsonArray movies = result.getAsJsonArray("results");
+                            List mymovies = new ArrayList<Movie>();
 
-                        for(JsonElement movie: movies){
-                            mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
-                                    movie.getAsJsonObject().get("poster_path").getAsString(),
-                                    movie.getAsJsonObject().get("original_title").getAsString(),
-                                    movie.getAsJsonObject().get("overview").getAsString(),
-                                    movie.getAsJsonObject().get("vote_average").getAsFloat(),
-                                    movie.getAsJsonObject().get("release_date").getAsString()));
+                            for (JsonElement movie : movies) {
+                                mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                        movie.getAsJsonObject().get("poster_path").getAsString(),
+                                        movie.getAsJsonObject().get("original_title").getAsString(),
+                                        movie.getAsJsonObject().get("overview").getAsString(),
+                                        movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                        movie.getAsJsonObject().get("release_date").getAsString()));
+                            }
+                            movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                            moviesGridView.setAdapter(movieAdapter);
+                            movieAdapter.notifyDataSetChanged();
+                        }else{
+                            e.printStackTrace();
+                            //connection error probably, so show favorited movies
+                            Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
                         }
-                        movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
-                        moviesGridView.setAdapter(movieAdapter);
-                        movieAdapter.notifyDataSetChanged();
                     }
                 });
         return rootView;
@@ -117,21 +125,26 @@ public class MoviesFragment extends Fragment{
 
                             @Override
                             public void onCompleted(Exception e, JsonObject result) {
-                                JsonArray movies = result.getAsJsonArray("results");
-                                List mymovies = new ArrayList<Movie>();
+                                if(result != null) {
+                                    JsonArray movies = result.getAsJsonArray("results");
+                                    List mymovies = new ArrayList<Movie>();
 
-                                for(JsonElement movie: movies){
-                                    mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
-                                            movie.getAsJsonObject().get("poster_path").getAsString(),
-                                            movie.getAsJsonObject().get("original_title").getAsString(),
-                                            movie.getAsJsonObject().get("overview").getAsString(),
-                                            movie.getAsJsonObject().get("vote_average").getAsFloat(),
-                                            movie.getAsJsonObject().get("release_date").getAsString()));
+                                    for (JsonElement movie : movies) {
+                                        mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                                movie.getAsJsonObject().get("poster_path").getAsString(),
+                                                movie.getAsJsonObject().get("original_title").getAsString(),
+                                                movie.getAsJsonObject().get("overview").getAsString(),
+                                                movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                                movie.getAsJsonObject().get("release_date").getAsString()));
+                                    }
+                                    movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                                    moviesGridView.setAdapter(movieAdapter);
+
+                                    movieAdapter.notifyDataSetChanged();
+                                }else{
+                                    //e.printStackTrace();
+                                    Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
                                 }
-                                movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
-                                moviesGridView.setAdapter(movieAdapter);
-
-                                movieAdapter.notifyDataSetChanged();
                             }
                         });
                 return true;
@@ -143,22 +156,31 @@ public class MoviesFragment extends Fragment{
 
                             @Override
                             public void onCompleted(Exception e, JsonObject result) {
-                                JsonArray movies = result.getAsJsonArray("results");
-                                List mymovies = new ArrayList<Movie>();
+                                if(result != null) {
+                                    JsonArray movies = result.getAsJsonArray("results");
+                                    List mymovies = new ArrayList<Movie>();
 
-                                for(JsonElement movie: movies){
-                                    mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
-                                            movie.getAsJsonObject().get("poster_path").getAsString(),
-                                            movie.getAsJsonObject().get("original_title").getAsString(),
-                                            movie.getAsJsonObject().get("overview").getAsString(),
-                                            movie.getAsJsonObject().get("vote_average").getAsFloat(),
-                                            movie.getAsJsonObject().get("release_date").getAsString()));
+                                    for (JsonElement movie : movies) {
+                                        mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                                movie.getAsJsonObject().get("poster_path").getAsString(),
+                                                movie.getAsJsonObject().get("original_title").getAsString(),
+                                                movie.getAsJsonObject().get("overview").getAsString(),
+                                                movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                                movie.getAsJsonObject().get("release_date").getAsString()));
+                                    }
+                                    movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                                    moviesGridView.setAdapter(movieAdapter);
+                                    movieAdapter.notifyDataSetChanged();
+                                }else{
+                                    e.printStackTrace();
+                                    Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
                                 }
-                                movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
-                                moviesGridView.setAdapter(movieAdapter);
-                                movieAdapter.notifyDataSetChanged();
                             }
                         });
+                return true;
+            case R.id.favorited:
+                //fetch favorite movies from database and update the adapter
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -172,5 +194,45 @@ public class MoviesFragment extends Fragment{
         }
 
         return "";
+    }
+
+    /**
+     * Called to ask the fragment to save its current dynamic state, so it
+     * can later be reconstructed in a new instance of its process is
+     * restarted.  If a new instance of the fragment later needs to be
+     * created, the data you place in the Bundle here will be available
+     * in the Bundle given to {@link #onCreate(android.os.Bundle)},
+     * {@link #onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)}, and
+     * {@link #onActivityCreated(android.os.Bundle)}.
+     * <p/>
+     * <p>This corresponds to {@link android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     * Activity.onSaveInstanceState(Bundle)} and most of the discussion there
+     * applies here as well.  Note however: <em>this method may be called
+     * at any time before {@link #onDestroy()}</em>.  There are many situations
+     * where a fragment may be mostly torn down (such as when placed on the
+     * back stack with no UI showing), but its state will not be saved until
+     * its owning activity actually needs to save its state.
+     *
+     * @param outState Bundle in which to place your saved state.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Called when all saved state has been restored into the view hierarchy
+     * of the fragment.  This can be used to do initialization based on saved
+     * state that you are letting the view hierarchy track itself, such as
+     * whether check box widgets are currently checked.  This is called
+     * after {@link #onActivityCreated(android.os.Bundle)} and before
+     * {@link #onStart()}.
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     *                           a previous saved state, this is the state.
+     */
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 }

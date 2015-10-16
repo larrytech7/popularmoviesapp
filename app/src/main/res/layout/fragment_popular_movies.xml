@@ -17,7 +17,12 @@
         android:editable="true"
         android:focusable="true"
         android:hint="@string/searchtext"
-        android:lines="1" />
+        android:lines="1"
+        android:enabled="true"
+        android:focusableInTouchMode="true"
+        android:singleLine="true"
+        android:drawableRight="@android:drawable/ic_menu_search"
+        android:clickable="true" />
 
     <GridView
         android:layout_width="match_parent"
@@ -31,6 +36,7 @@
         android:layout_rowWeight="1"
         android:background="#ddd"
         android:fastScrollEnabled="true"
-        android:stretchMode="columnWidth" />
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dp" />
 
 </LinearLayout>
