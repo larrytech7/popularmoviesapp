@@ -4,10 +4,13 @@ package nanodegree.android.com.popularmoviesapp.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,11 +23,12 @@ import nanodegree.android.com.popularmoviesapp.model.Movie;
  * Use the {@link DetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private View rootView;
+    private ImageButton favoriteButton;
     private String mParam1;
     private String mParam2;
 
@@ -57,6 +61,7 @@ public class DetailsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -64,12 +69,14 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
         //view items
+        favoriteButton = (ImageButton) rootView.findViewById(R.id.favoriteButton);
         TextView titleTextView = (TextView) rootView.findViewById(R.id.movieTitleTextview);
         ImageView posterimg = (ImageView) rootView.findViewById(R.id.moviePosterImage);
         TextView releaseDate = (TextView) rootView.findViewById(R.id.movieReleaseDate);
         TextView rating = (TextView) rootView.findViewById(R.id.movieRating);
         TextView overview = (TextView) rootView.findViewById(R.id.movieOverview);
         //bind data to view
+        favoriteButton.setOnClickListener(this);
         Movie movie = getActivity().getIntent().getParcelableExtra("nanodegree.android.com.popularmoviesapp.model.Movie");
         titleTextView.setText(movie.getMovie_title());
         releaseDate.setText("Released : "+movie.getMovie_release_date());
@@ -83,5 +90,36 @@ public class DetailsFragment extends Fragment {
                 .into(posterimg);
 
         return rootView;
+    }
+
+    /**
+     * This hook is called whenever an item in your options menu is selected.
+     * The default implementation simply returns false to have the normal
+     * processing happen (calling the item's Runnable or sending a message to
+     * its Handler as appropriate).  You can use this method for any items
+     * for which you would like to do processing without those other
+     * facilities.
+     * <p/>
+     * <p>Derived classes should call through to the base class for it to
+     * perform the default menu handling.
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to
+     * proceed, true to consume it here.
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.favoriteButton:
+                favoriteButton.setImageResource(android.R.drawable.star_on);
+                Toast.makeText(getActivity(), "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 }
