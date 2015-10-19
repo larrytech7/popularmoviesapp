@@ -1,6 +1,7 @@
 package nanodegree.android.com.popularmoviesapp.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,20 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
+import nanodegree.android.com.popularmoviesapp.adapter.MovietrailerAdapter;
+import nanodegree.android.com.popularmoviesapp.adapter.ReviewerAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
+import nanodegree.android.com.popularmoviesapp.model.Trailer;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DetailsFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_PARAM1 = "param1";
@@ -31,16 +39,11 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
     private ImageButton favoriteButton;
     private String mParam1;
     private String mParam2;
+    private final static String TRAILER_REVIEW_URL = "http://api.themoviedb.org/3/movie/";
+    private MovietrailerAdapter movietrailerAdapter;
+    private ReviewerAdapter reviewerAdapter;
+    private ListView trailerListview;
 
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsFragment.
-     */
     public static DetailsFragment newInstance(String param1, String param2) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
@@ -75,6 +78,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
         TextView releaseDate = (TextView) rootView.findViewById(R.id.movieReleaseDate);
         TextView rating = (TextView) rootView.findViewById(R.id.movieRating);
         TextView overview = (TextView) rootView.findViewById(R.id.movieOverview);
+        trailerListview = (ListView) rootView.findViewById(R.id.trailerListView);
         //bind data to view
         favoriteButton.setOnClickListener(this);
         Movie movie = getActivity().getIntent().getParcelableExtra("nanodegree.android.com.popularmoviesapp.model.Movie");
@@ -88,6 +92,8 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                 .placeholder(R.drawable.imageloading)
                 .error(R.mipmap.err_image)
                 .into(posterimg);
+        //load the movie trailers
+        this.loadTrailerInfo(movie.getMovie_id(), trailerListview);
 
         return rootView;
     }
@@ -121,5 +127,41 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
                 break;
         }
+    }
+
+    private void loadTrailerInfo(long movieid, final ListView lv){
+        Ion.with(getActivity())
+                .load(TRAILER_REVIEW_URL+movieid+"?api_key=76183055a219f7917ab7b2e71f9cada1&append_to_response=trailers,reviews")
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if(result != null) {
+                            JsonObject tobject = result.getAsJsonObject("trailers");
+                            JsonArray movieTrailers = tobject.getAsJsonArray("youtube"); //now holds an array of json trailer objects
+
+                            List trailers = new ArrayList<Trailer>();
+
+                            for (JsonElement trailer : movieTrailers) {
+                                trailers.add(new Trailer(
+                                        trailer.getAsJsonObject().get("name").getAsString(),
+                                        trailer.getAsJsonObject().get("size").getAsString()+" "+
+                                                trailer.getAsJsonObject().get("type").getAsString(),
+                                        trailer.getAsJsonObject().get("source").getAsString()));
+                            }
+                            movietrailerAdapter = new MovietrailerAdapter(getActivity(), (ArrayList<Trailer>) trailers);
+                            lv.setAdapter(movietrailerAdapter);
+                            movietrailerAdapter.notifyDataSetChanged();
+                        }else{
+                            e.printStackTrace();
+                            Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private void loadReviewInfo(Context context, final ListView lv){
+
     }
 }

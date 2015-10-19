@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MovietrailerAdapter extends ArrayAdapter<Trailer> {
 
     @Override
     public Trailer getItem(int position) {
-        return super.getItem(position);
+        return this.trailers.get(position);
     }
 
     @Override
@@ -37,6 +38,12 @@ public class MovietrailerAdapter extends ArrayAdapter<Trailer> {
         if(convertView == null){
             convertView = LayoutInflater.from(this.ctx).inflate(R.layout.trailer_layout, parent, false);
         }
+        Trailer trailer = this.trailers.get(position);
+        TextView title = (TextView) convertView.findViewById(R.id.trailer_title);
+        TextView synopsis = (TextView) convertView.findViewById(R.id.trailer_synopsis);
+        title.setText(trailer.getTrailer_title());
+        synopsis.setText(trailer.getTrailer_synopsis());
+
         return convertView;
 
     }
