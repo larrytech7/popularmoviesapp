@@ -5,24 +5,20 @@ package nanodegree.android.com.popularmoviesapp.model;
  * Created by Larry Akah on 10/17/15 1:54 PM.
  */
 public class Trailer {
-    private long trailer_id;
-    private String trailer_title;
-    private String trailer_synopsis;
-    private String trailer_url;
+    private String trailer_title; //name parameter
+    private String trailer_synopsis; //type/size parameter
+    private String trailer_url; //source parameter
 
-    public Trailer() {
+    public Trailer(String ttitle, String tsynopsis, String turl) {
+
+        this.trailer_title = ttitle;
+        this.trailer_synopsis = tsynopsis;
+        this.trailer_url = turl;
     }
 
-    public long getTrailer_id() {
-        return trailer_id;
-    }
-
-    public void setTrailer_id(long trailer_id) {
-        this.trailer_id = trailer_id;
-    }
 
     public String getTrailer_title() {
-        return trailer_title;
+        return this.trailer_title;
     }
 
     public void setTrailer_title(String trailer_title) {
@@ -30,7 +26,7 @@ public class Trailer {
     }
 
     public String getTrailer_synopsis() {
-        return trailer_synopsis;
+        return this.trailer_synopsis;
     }
 
     public void setTrailer_synopsis(String trailer_synopsis) {
@@ -38,7 +34,7 @@ public class Trailer {
     }
 
     public String getTrailer_url() {
-        return trailer_url;
+        return this.trailer_url;
     }
 
     public void setTrailer_url(String trailer_url) {
