@@ -78,9 +78,17 @@
             android:id="@+id/movieOverview"
             android:layout_margin="5dp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/trailertext"
+            android:id="@+id/trailertittletext"
+            android:background="@color/accent_material_dark" />
+
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/trailerListView"
             android:dividerHeight="1dp"
             android:divider="#fbe" />
