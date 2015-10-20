@@ -69,28 +69,8 @@ public class DetailsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
         Movie movie = getActivity().getIntent().getParcelableExtra("nanodegree.android.com.popularmoviesapp.model.Movie");
         trailerListview = (ListView) rootView.findViewById(R.id.trailerListView);
-        /*//view items
-        favoriteButton = (ImageButton) rootView.findViewById(R.id.favoriteButton);
-        TextView titleTextView = (TextView) rootView.findViewById(R.id.movieTitleTextview);
-        ImageView posterimg = (ImageView) rootView.findViewById(R.id.moviePosterImage);
-        TextView releaseDate = (TextView) rootView.findViewById(R.id.movieReleaseDate);
-        TextView rating = (TextView) rootView.findViewById(R.id.movieRating);
-        TextView overview = (TextView) rootView.findViewById(R.id.movieOverview);
-        trailerListview = (ListView) rootView.findViewById(R.id.trailerListView);
-        //bind data to view
-        favoriteButton.setOnClickListener(this);
-        Movie movie = getActivity().getIntent().getParcelableExtra("nanodegree.android.com.popularmoviesapp.model.Movie");
-        titleTextView.setText(movie.getMovie_title());
-        releaseDate.setText("Released : "+movie.getMovie_release_date());
-        rating.setText("Rating : "+movie.getMovie_rating());
-        overview.setText(movie.getMovie_overview());
-        Picasso.with(getActivity())
-                .load(MovieAdapter.POSTER_URL + movie.getMovie_poster_url())
-                .resize(280, 300)
-                .placeholder(R.drawable.imageloading)
-                .error(R.mipmap.err_image)
-                .into(posterimg);*/
-        //load the movie trailers
+
+        //load the movie details alongside trailers and reviews
         this.loadTrailerInfo(movie.getMovie_id(), trailerListview, movie);
 
         return rootView;
@@ -127,7 +107,9 @@ public class DetailsFragment extends Fragment {
                     public void onCompleted(Exception e, JsonObject result) {
                         if(result != null) {
                             JsonObject tobject = result.getAsJsonObject("trailers");
+                            JsonObject robject = result.getAsJsonObject("reviews");
                             JsonArray movieTrailers = tobject.getAsJsonArray("youtube"); //now holds an array of json trailer objects
+                            JsonArray movieReviews = robject.getAsJsonArray("results");
 
                             List trailers = new ArrayList<Trailer>();
                             List reviews = new ArrayList<Reviewer>();
@@ -138,6 +120,11 @@ public class DetailsFragment extends Fragment {
                                         trailer.getAsJsonObject().get("size").getAsString()+" "+
                                                 trailer.getAsJsonObject().get("type").getAsString(),
                                         trailer.getAsJsonObject().get("source").getAsString()));
+                            }
+                            for(JsonElement review : movieReviews){
+                                reviews.add( new Reviewer(review.getAsJsonObject().get("author").getAsString(),
+                                        review.getAsJsonObject().get("content").getAsString(),
+                                        review.getAsJsonObject().get("url").getAsString()));
                             }
                             moviedetailAdapter = new MoviedetailAdapter(getActivity(), movie, (ArrayList<Trailer>) trailers,(ArrayList<Reviewer>) reviews );
                             lv.setAdapter(moviedetailAdapter);

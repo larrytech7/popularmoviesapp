@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
     private Context ctx;
     private static final String YOUTUBE_TRAILER_URL = "http://img.youtube.com/vi/";
     private static final String URL_IMG_SUFFIX ="/0.jpg";
+    private int reviewCount = 0;
 
     public MoviedetailAdapter(Context context, Movie movie, ArrayList<Trailer> list, ArrayList<Reviewer> reviews) {
         super(context, 0);
@@ -82,17 +84,43 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
                     .into(posterimg);
             return convertView;
         }
-        Trailer trailer = this.trailers.get(position-1);
-        TextView title = (TextView) convertView.findViewById(R.id.trailer_title);
-        TextView synopsis = (TextView) convertView.findViewById(R.id.trailer_synopsis);
-        title.setText(trailer.getTrailer_title());
-        synopsis.setText(trailer.getTrailer_synopsis());
-        Picasso.with(ctx)
-                .load(YOUTUBE_TRAILER_URL + trailer.getTrailer_url()+URL_IMG_SUFFIX)
-                .resize(280, 300)
-                .placeholder(R.drawable.imageloading)
-                .error(R.mipmap.err_image)
-                .into((ImageView) convertView.findViewById(R.id.trailer_preview));
+        if(position > trailers.size()){
+            convertView = LayoutInflater.from(ctx).inflate(R.layout.reviewlayout, parent, false);
+            try {
+                Reviewer review = this.reviewers.get(reviewCount++);
+                //load views
+                CircularImageView circularAuthorImageView = (CircularImageView) convertView.findViewById(R.id.authorimage);
+                TextView revAuthorName = (TextView) convertView.findViewById(R.id.authorTextview);
+                TextView content = (TextView) convertView.findViewById(R.id.reviewContent);
+                revAuthorName.setText(review.getAuthor());
+                content.setText(review.getContent());
+                Picasso.with(ctx)
+                        .load(review.getUrl())
+                        .resize(280, 300)
+                        .placeholder(R.drawable.imageloading)
+                        .error(R.mipmap.err_image)
+                        .into(circularAuthorImageView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return convertView;
+        }
+        try {
+            Trailer trailer = this.trailers.get(position-1);
+            TextView title = (TextView) convertView.findViewById(R.id.trailer_title);
+            TextView synopsis = (TextView) convertView.findViewById(R.id.trailer_synopsis);
+            title.setText(trailer.getTrailer_title());
+            synopsis.setText(trailer.getTrailer_synopsis());
+            Picasso.with(ctx)
+                    .load(YOUTUBE_TRAILER_URL + trailer.getTrailer_url()+URL_IMG_SUFFIX)
+                    .resize(280, 300)
+                    .placeholder(R.drawable.imageloading)
+                    .error(R.mipmap.err_image)
+                    .into((ImageView) convertView.findViewById(R.id.trailer_preview));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return convertView;
 

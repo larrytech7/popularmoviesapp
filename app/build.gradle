@@ -27,5 +27,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.koushikdutta.ion:ion:2.+'
+    compile 'com.pkmmte.view:circularimageview:1.1'
 }
 
