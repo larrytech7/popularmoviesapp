@@ -1,15 +1,19 @@
+<!--
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="nanodegree.android.com.popularmoviesapp.fragments.DetailsFragment">
+-->
 
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/detailsLinearLayout"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        tools:context="nanodegree.android.com.popularmoviesapp.fragments.DetailsFragment">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -35,18 +39,18 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/moviePosterImage" />
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp">
 
                 <TextView
@@ -93,5 +97,5 @@
             android:dividerHeight="1dp"
             android:divider="#fbe" />
 
-    </LinearLayout>
-</ScrollView>
+    </LinearLayout><!--
+</ScrollView>-->
