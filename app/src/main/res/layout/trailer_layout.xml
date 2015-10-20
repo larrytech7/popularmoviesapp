@@ -7,13 +7,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/trailer_preview"
-        android:layout_weight="1"
-        android:background="@mipmap/ic_trailerbg" />
+        android:layout_weight="1" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"

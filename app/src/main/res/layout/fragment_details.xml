@@ -15,6 +15,7 @@
         android:layout_height="fill_parent"
         tools:context="nanodegree.android.com.popularmoviesapp.fragments.DetailsFragment">
 
+<!--
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -89,6 +90,7 @@
             android:text="@string/trailertext"
             android:id="@+id/trailertittletext"
             android:background="@color/accent_material_dark" />
+-->
 
         <ListView
             android:layout_width="wrap_content"

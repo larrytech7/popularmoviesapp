@@ -1,7 +1,6 @@
 package nanodegree.android.com.popularmoviesapp.fragments;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,9 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -19,19 +16,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import nanodegree.android.com.popularmoviesapp.R;
-import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
-import nanodegree.android.com.popularmoviesapp.adapter.MovietrailerAdapter;
+import nanodegree.android.com.popularmoviesapp.adapter.MoviedetailAdapter;
 import nanodegree.android.com.popularmoviesapp.adapter.ReviewerAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
+import nanodegree.android.com.popularmoviesapp.model.Reviewer;
 import nanodegree.android.com.popularmoviesapp.model.Trailer;
 
-public class DetailsFragment extends Fragment implements View.OnClickListener {
+public class DetailsFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -40,7 +36,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
     private String mParam1;
     private String mParam2;
     private final static String TRAILER_REVIEW_URL = "http://api.themoviedb.org/3/movie/";
-    private MovietrailerAdapter movietrailerAdapter;
+    private MoviedetailAdapter moviedetailAdapter;
     private ReviewerAdapter reviewerAdapter;
     private ListView trailerListview;
 
@@ -71,7 +67,9 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
-        //view items
+        Movie movie = getActivity().getIntent().getParcelableExtra("nanodegree.android.com.popularmoviesapp.model.Movie");
+        trailerListview = (ListView) rootView.findViewById(R.id.trailerListView);
+        /*//view items
         favoriteButton = (ImageButton) rootView.findViewById(R.id.favoriteButton);
         TextView titleTextView = (TextView) rootView.findViewById(R.id.movieTitleTextview);
         ImageView posterimg = (ImageView) rootView.findViewById(R.id.moviePosterImage);
@@ -91,9 +89,9 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                 .resize(280, 300)
                 .placeholder(R.drawable.imageloading)
                 .error(R.mipmap.err_image)
-                .into(posterimg);
+                .into(posterimg);*/
         //load the movie trailers
-        this.loadTrailerInfo(movie.getMovie_id(), trailerListview);
+        this.loadTrailerInfo(movie.getMovie_id(), trailerListview, movie);
 
         return rootView;
     }
@@ -119,17 +117,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.favoriteButton:
-                favoriteButton.setImageResource(android.R.drawable.star_on);
-                Toast.makeText(getActivity(), "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
-                break;
-        }
-    }
-
-    private void loadTrailerInfo(long movieid, final ListView lv){
+    private void loadTrailerInfo(long movieid, final ListView lv, final Movie movie){
         Ion.with(getActivity())
                 .load(TRAILER_REVIEW_URL+movieid+"?api_key=76183055a219f7917ab7b2e71f9cada1&append_to_response=trailers,reviews")
                 .asJsonObject()
@@ -142,6 +130,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                             JsonArray movieTrailers = tobject.getAsJsonArray("youtube"); //now holds an array of json trailer objects
 
                             List trailers = new ArrayList<Trailer>();
+                            List reviews = new ArrayList<Reviewer>();
 
                             for (JsonElement trailer : movieTrailers) {
                                 trailers.add(new Trailer(
@@ -150,9 +139,9 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                                                 trailer.getAsJsonObject().get("type").getAsString(),
                                         trailer.getAsJsonObject().get("source").getAsString()));
                             }
-                            movietrailerAdapter = new MovietrailerAdapter(getActivity(), (ArrayList<Trailer>) trailers);
-                            lv.setAdapter(movietrailerAdapter);
-                            movietrailerAdapter.notifyDataSetChanged();
+                            moviedetailAdapter = new MoviedetailAdapter(getActivity(), movie, (ArrayList<Trailer>) trailers,(ArrayList<Reviewer>) reviews );
+                            lv.setAdapter(moviedetailAdapter);
+                            moviedetailAdapter.notifyDataSetChanged();
                         }else{
                             e.printStackTrace();
                             Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
@@ -161,7 +150,4 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    private void loadReviewInfo(Context context, final ListView lv){
-
-    }
 }
