@@ -89,17 +89,12 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             try {
                 Reviewer review = this.reviewers.get(reviewCount++);
                 //load views
-                CircularImageView circularAuthorImageView = (CircularImageView) convertView.findViewById(R.id.authorimage);
+                //CircularImageView circularAuthorImageView = (CircularImageView) convertView.findViewById(R.id.authorimage);
                 TextView revAuthorName = (TextView) convertView.findViewById(R.id.authorTextview);
                 TextView content = (TextView) convertView.findViewById(R.id.reviewContent);
                 revAuthorName.setText(review.getAuthor());
                 content.setText(review.getContent());
-                Picasso.with(ctx)
-                        .load(review.getUrl())
-                        .resize(280, 300)
-                        .placeholder(R.drawable.imageloading)
-                        .error(R.mipmap.err_image)
-                        .into(circularAuthorImageView);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
