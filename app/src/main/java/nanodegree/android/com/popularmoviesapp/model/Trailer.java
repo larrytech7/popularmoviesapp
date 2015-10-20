@@ -21,23 +21,12 @@ public class Trailer {
         return this.trailer_title;
     }
 
-    public void setTrailer_title(String trailer_title) {
-        this.trailer_title = trailer_title;
-    }
-
     public String getTrailer_synopsis() {
         return this.trailer_synopsis;
-    }
-
-    public void setTrailer_synopsis(String trailer_synopsis) {
-        this.trailer_synopsis = trailer_synopsis;
     }
 
     public String getTrailer_url() {
         return this.trailer_url;
     }
 
-    public void setTrailer_url(String trailer_url) {
-        this.trailer_url = trailer_url;
-    }
 }
