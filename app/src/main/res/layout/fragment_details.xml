@@ -97,7 +97,8 @@
             android:layout_height="match_parent"
             android:id="@+id/trailerListView"
             android:dividerHeight="1dp"
-            android:divider="#fbe" />
+            android:divider="#fbe"
+            android:choiceMode="singleChoice" />
 
     </LinearLayout><!--
 </ScrollView>-->

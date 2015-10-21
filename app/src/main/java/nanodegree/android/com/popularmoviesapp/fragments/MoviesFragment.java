@@ -36,6 +36,9 @@ public class MoviesFragment extends Fragment{
     private MovieAdapter movieAdapter;
     private View rootView;
     private static final String API_KEY = "76183055a219f7917ab7b2e71f9cada1";
+    private int mPosition;
+    private String SELECTED_MOVIE_POSITION;
+
     private enum API_REQUEST {POPULARITY, RATING};
     private static final String MOVIES_API_LINK = "http://api.themoviedb.org/3/discover/movie?sort_by=";
 
@@ -53,6 +56,7 @@ public class MoviesFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 
     @Override
@@ -89,6 +93,23 @@ public class MoviesFragment extends Fragment{
                         }
                     }
                 });
+        moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Movie mv = (Movie) adapterView.getItemAtPosition(position);
+                mv.writeToParcel(Parcel.obtain(), 0);
+                //Intent detailIntent = new Intent(getActivity(), DetailsActivity.class);
+                //detailIntent.putExtra("nanodegree.android.com.popularmoviesapp.model.Movie", mv);
+                //startActivity(detailIntent);
+                ((MovieClickListener) getActivity()).onMovieItemClick(mv);
+                mPosition = position;
+            }
+        });
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(SELECTED_MOVIE_POSITION)){
+            mPosition = savedInstanceState.getInt(SELECTED_MOVIE_POSITION);
+        }
+
         return rootView;
     }
 
@@ -101,17 +122,7 @@ public class MoviesFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Movie mv = (Movie) adapterView.getItemAtPosition(position);
-                mv.writeToParcel(Parcel.obtain(), 0);
-                Intent detailIntent = new Intent(getActivity(), DetailsActivity.class);
-                detailIntent.putExtra("nanodegree.android.com.popularmoviesapp.model.Movie", mv);
-                startActivity(detailIntent);
-                //Toast.makeText(getActivity(), ""+mv.getMovie_title(), Toast.LENGTH_LONG).show();
-            }
-        });
+        moviesGridView.setSelection(mPosition);
     }
 
     @Override
@@ -217,6 +228,9 @@ public class MoviesFragment extends Fragment{
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if(mPosition != GridView.INVALID_POSITION){
+            outState.putInt(SELECTED_MOVIE_POSITION, mPosition);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -234,5 +248,10 @@ public class MoviesFragment extends Fragment{
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+    }
+
+    public interface MovieClickListener{
+
+        public void onMovieItemClick(Movie movie);
     }
 }

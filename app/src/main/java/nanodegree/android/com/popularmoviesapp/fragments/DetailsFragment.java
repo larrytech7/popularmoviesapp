@@ -33,18 +33,17 @@ public class DetailsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private View rootView;
     private ImageButton favoriteButton;
-    private String mParam1;
-    private String mParam2;
+    private static String MOVIE = "nanodegree.android.com.popularmoviesapp.model.Movie";
     private final static String TRAILER_REVIEW_URL = "http://api.themoviedb.org/3/movie/";
     private MoviedetailAdapter moviedetailAdapter;
     private ReviewerAdapter reviewerAdapter;
     private ListView trailerListview;
+    private Movie movieToDisplay;
 
-    public static DetailsFragment newInstance(String param1, String param2) {
+    public static DetailsFragment newInstance(Movie movie) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(MOVIE, movie);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,22 +55,22 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         setHasOptionsMenu(true);
+        if (getArguments() != null) {
+            movieToDisplay = getArguments().getParcelable(MOVIE);
+        }else if(getActivity().getIntent() != null){
+            movieToDisplay = getActivity().getIntent().getParcelableExtra(MOVIE);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
-        Movie movie = getActivity().getIntent().getParcelableExtra("nanodegree.android.com.popularmoviesapp.model.Movie");
         trailerListview = (ListView) rootView.findViewById(R.id.trailerListView);
 
         //load the movie details alongside trailers and reviews
-        this.loadTrailerInfo(movie.getMovie_id(), trailerListview, movie);
+        this.loadTrailerInfo(movieToDisplay.getMovie_id(), trailerListview, movieToDisplay);
 
         return rootView;
     }
