@@ -1,6 +1,8 @@
 package nanodegree.android.com.popularmoviesapp.fragments;
 
-import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.annotation.Nullable;
@@ -22,7 +24,6 @@ import com.koushikdutta.ion.Ion;
 import java.util.ArrayList;
 import java.util.List;
 
-import nanodegree.android.com.popularmoviesapp.DetailsActivity;
 import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.FavoriteMovieAdapter;
 import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
@@ -66,6 +67,7 @@ public class MoviesFragment extends Fragment{
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_popular_movies, container, false);
         moviesGridView = (GridView) rootView.findViewById(R.id.moviesGridView);
+        if(isNetworkAvailable())
         Ion.with(getActivity())
                 .load(this.buildApiRequest(API_REQUEST.POPULARITY))
                 .asJsonObject()
@@ -95,6 +97,16 @@ public class MoviesFragment extends Fragment{
                         }
                     }
                 });
+        else{
+            moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
+                    getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null), 0));
+        }
+
+
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -260,6 +272,9 @@ public class MoviesFragment extends Fragment{
     }
 
     private boolean isNetworkAvailable(){
-        return false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI | ConnectivityManager.TYPE_MOBILE);
+
+        return networkInfo.isConnected();
     }
 }
