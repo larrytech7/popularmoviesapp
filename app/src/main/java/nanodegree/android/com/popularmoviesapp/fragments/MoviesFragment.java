@@ -24,8 +24,10 @@ import java.util.List;
 
 import nanodegree.android.com.popularmoviesapp.DetailsActivity;
 import nanodegree.android.com.popularmoviesapp.R;
+import nanodegree.android.com.popularmoviesapp.adapter.FavoriteMovieAdapter;
 import nanodegree.android.com.popularmoviesapp.adapter.MovieAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
+import nanodegree.android.com.popularmoviesapp.model.MovieContentProvider;
 
 /**
  * Created by Larry akah on 10/14/15.
@@ -98,9 +100,6 @@ public class MoviesFragment extends Fragment{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Movie mv = (Movie) adapterView.getItemAtPosition(position);
                 mv.writeToParcel(Parcel.obtain(), 0);
-                //Intent detailIntent = new Intent(getActivity(), DetailsActivity.class);
-                //detailIntent.putExtra("nanodegree.android.com.popularmoviesapp.model.Movie", mv);
-                //startActivity(detailIntent);
                 ((MovieClickListener) getActivity()).onMovieItemClick(mv);
                 mPosition = position;
             }
@@ -191,7 +190,12 @@ public class MoviesFragment extends Fragment{
                 return true;
             case R.id.favorited:
                 //fetch favorite movies from database and update the adapter
-
+                moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
+                        getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null), 0));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -253,5 +257,9 @@ public class MoviesFragment extends Fragment{
     public interface MovieClickListener{
 
         public void onMovieItemClick(Movie movie);
+    }
+
+    private boolean isNetworkAvailable(){
+        return false;
     }
 }

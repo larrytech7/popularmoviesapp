@@ -11,7 +11,6 @@ import net.simonvt.schematic.annotation.PrimaryKey;
  */
 public interface MovieColumns {
     @DataType(DataType.Type.INTEGER) @PrimaryKey
-    @AutoIncrement
     String MOVIE_ID = "_id";
 
     @DataType(DataType.Type.TEXT) @NotNull
@@ -25,7 +24,6 @@ public interface MovieColumns {
 
     @DataType(DataType.Type.REAL) @NotNull
     String MOVIE_RATING = "rating";
-
 
     @DataType(DataType.Type.TEXT) @NotNull
     String MOVIE_RELEASE_DATE = "release_date";

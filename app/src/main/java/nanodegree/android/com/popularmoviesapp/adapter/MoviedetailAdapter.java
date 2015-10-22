@@ -1,6 +1,15 @@
 package nanodegree.android.com.popularmoviesapp.adapter;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.OperationApplicationException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.RemoteException;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +20,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.ion.BitmapDrawableFactory;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
+import nanodegree.android.com.popularmoviesapp.model.MovieColumns;
+import nanodegree.android.com.popularmoviesapp.model.MovieContentProvider;
 import nanodegree.android.com.popularmoviesapp.model.Reviewer;
 import nanodegree.android.com.popularmoviesapp.model.Trailer;
 
@@ -28,6 +41,7 @@ import nanodegree.android.com.popularmoviesapp.model.Trailer;
  */
 public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
 
+    private static final String LOG_TAG = MoviedetailAdapter.class.getName();
     private List<Trailer> trailers;
     private List<Reviewer> reviewers;
     private Movie movie;
@@ -68,6 +82,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(insertMovie(movie, getByteArrayFromDrawable(posterimg.getDrawable())))
                     favoriteButton.setImageResource(android.R.drawable.star_on);
                     Toast.makeText(ctx, "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
                 }
@@ -128,5 +143,56 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
     @Override
     public int getCount() {
         return this.trailers.size() + this.reviewers.size() +1;
+    }
+
+    private boolean insertMovie(Movie movie, byte[] moviephoto){
+        Log.d(LOG_TAG, "insert");
+        ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>(1);
+
+        ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
+                MovieContentProvider.Movies.CONTENT_URI);
+        builder.withValue(MovieColumns.MOVIE_ID, movie.getMovie_id());
+        builder.withValue(MovieColumns.MOVIE_TITLE, movie.getMovie_title());
+        builder.withValue(MovieColumns.MOVIE_POSTER,moviephoto);
+        builder.withValue(MovieColumns.MOVIE_SYNOPSIS, movie.getMovie_overview());
+        builder.withValue(MovieColumns.MOVIE_RATING, movie.getMovie_rating());
+        builder.withValue(MovieColumns.MOVIE_RELEASE_DATE, movie.getMovie_release_date());
+        batchOperations.add(builder.build());
+
+        try{
+            ctx.getContentResolver().applyBatch(MovieContentProvider.AUTHORITY, batchOperations);
+            return true;
+        } catch(RemoteException | OperationApplicationException e){
+            Log.e(LOG_TAG, "Error applying  insert", e);
+            return false;
+        }
+    }
+
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        final int width = !drawable.getBounds().isEmpty() ? drawable
+                .getBounds().width() : drawable.getIntrinsicWidth();
+
+        final int height = !drawable.getBounds().isEmpty() ? drawable
+                .getBounds().height() : drawable.getIntrinsicHeight();
+
+        final Bitmap bitmap = Bitmap.createBitmap(width <= 0 ? 1 : width,
+                height <= 0 ? 1 : height, Bitmap.Config.ARGB_8888);
+
+        Log.v("Bitmap width - Height :", width + " : " + height);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+    private byte[] getByteArrayFromDrawable( Drawable drawable){
+        Bitmap bitmap = drawableToBitmap(drawable);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 }

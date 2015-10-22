@@ -1,8 +1,13 @@
 package nanodegree.android.com.popularmoviesapp.fragments;
 
 
+import android.content.ContentProviderOperation;
+import android.content.OperationApplicationException;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +29,8 @@ import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.MoviedetailAdapter;
 import nanodegree.android.com.popularmoviesapp.adapter.ReviewerAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
+import nanodegree.android.com.popularmoviesapp.model.MovieColumns;
+import nanodegree.android.com.popularmoviesapp.model.MovieContentProvider;
 import nanodegree.android.com.popularmoviesapp.model.Reviewer;
 import nanodegree.android.com.popularmoviesapp.model.Trailer;
 
@@ -39,6 +46,7 @@ public class DetailsFragment extends Fragment {
     private ReviewerAdapter reviewerAdapter;
     private ListView trailerListview;
     private Movie movieToDisplay;
+    private final String LOG_TAG = DetailsFragment.class.getName();
 
     public static DetailsFragment newInstance(Movie movie) {
         DetailsFragment fragment = new DetailsFragment();
