@@ -12,4 +12,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="nanodegree.android.com.popularmoviesapp.fragments.MoviesFragment"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame"
+    tools:layout="@layout/fragment_popular_movies" />
