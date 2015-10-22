@@ -3,8 +3,8 @@ package nanodegree.android.com.popularmoviesapp.adapter;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -20,8 +20,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.ion.BitmapDrawableFactory;
-import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -82,9 +80,14 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(insertMovie(movie, getByteArrayFromDrawable(posterimg.getDrawable())))
-                    favoriteButton.setImageResource(android.R.drawable.star_on);
-                    Toast.makeText(ctx, "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
+                    try {
+                        if (insertMovie(movie, getByteArrayFromDrawable(posterimg.getDrawable())))
+                            favoriteButton.setImageResource(android.R.drawable.star_on);
+                        Toast.makeText(ctx, "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
+
+                    }catch (SQLiteConstraintException sqle){
+                        Toast.makeText(ctx, "This movie is already a favorite", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
             titleTextView.setText(movie.getMovie_title());

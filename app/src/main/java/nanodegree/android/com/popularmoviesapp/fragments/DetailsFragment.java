@@ -1,17 +1,21 @@
 package nanodegree.android.com.popularmoviesapp.fragments;
 
 
-import android.content.ContentProviderOperation;
-import android.content.OperationApplicationException;
-import android.database.Cursor;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
+import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,8 +33,6 @@ import nanodegree.android.com.popularmoviesapp.R;
 import nanodegree.android.com.popularmoviesapp.adapter.MoviedetailAdapter;
 import nanodegree.android.com.popularmoviesapp.adapter.ReviewerAdapter;
 import nanodegree.android.com.popularmoviesapp.model.Movie;
-import nanodegree.android.com.popularmoviesapp.model.MovieColumns;
-import nanodegree.android.com.popularmoviesapp.model.MovieContentProvider;
 import nanodegree.android.com.popularmoviesapp.model.Reviewer;
 import nanodegree.android.com.popularmoviesapp.model.Trailer;
 
@@ -42,6 +44,7 @@ public class DetailsFragment extends Fragment {
     private ImageButton favoriteButton;
     private static String MOVIE = "nanodegree.android.com.popularmoviesapp.model.Movie";
     private final static String TRAILER_REVIEW_URL = "http://api.themoviedb.org/3/movie/";
+    private final static String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     private MoviedetailAdapter moviedetailAdapter;
     private ReviewerAdapter reviewerAdapter;
     private ListView trailerListview;
@@ -76,11 +79,48 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
         trailerListview = (ListView) rootView.findViewById(R.id.trailerListView);
-
+        trailerListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Trailer trailer = (Trailer) adapterView.getAdapter().getItem(i-1);
+                if(trailer != null)
+                startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(YOUTUBE_URL+trailer.getTrailer_url())));
+            }
+        });
         //load the movie details alongside trailers and reviews
         this.loadTrailerInfo(movieToDisplay.getMovie_id(), trailerListview, movieToDisplay);
 
         return rootView;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater mit) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        try {
+            Trailer trailer = ((MoviedetailAdapter)trailerListview.getAdapter()).getItem(0);
+            mit.inflate(R.menu.menu_details, menu);
+            MenuItem  mitem = menu.findItem(R.id.share);
+            ShareActionProvider lShareActionProvider;
+            lShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mitem);
+            if(lShareActionProvider !=null){
+
+                lShareActionProvider.setShareIntent(getShareIntent("View this trailer "+YOUTUBE_URL+trailer.getTrailer_url()));
+            }else{
+                Toast.makeText(getActivity(), "ShareProvider not ok", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @SuppressLint("InlinedApi")
+    private Intent getShareIntent(String text){
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.setType("text/*");
+        share.putExtra(Intent.EXTRA_TEXT, text);
+        share.putExtra(Intent.EXTRA_HTML_TEXT, Html.fromHtml(text));
+        return share;
     }
 
     /**
@@ -101,6 +141,7 @@ public class DetailsFragment extends Fragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         return super.onOptionsItemSelected(item);
     }
 
