@@ -96,14 +96,13 @@ public class DetailsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater mit) {
         // Inflate the menu; this adds items to the action bar if it is present.
         try {
-            Trailer trailer = ((MoviedetailAdapter)trailerListview.getAdapter()).getItem(0);
             mit.inflate(R.menu.menu_details, menu);
             MenuItem  mitem = menu.findItem(R.id.share);
             ShareActionProvider lShareActionProvider;
             lShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mitem);
             if(lShareActionProvider !=null){
 
-                lShareActionProvider.setShareIntent(getShareIntent("View this trailer "+YOUTUBE_URL+trailer.getTrailer_url()));
+                lShareActionProvider.setShareIntent(getShareIntent("View this trailer "+YOUTUBE_URL+MoviedetailAdapter.FIRST_TRAILER_URL));
             }else{
                 Toast.makeText(getActivity(), "ShareProvider not ok", Toast.LENGTH_LONG).show();
             }

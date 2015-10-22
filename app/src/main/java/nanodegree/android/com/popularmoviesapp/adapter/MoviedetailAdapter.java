@@ -47,6 +47,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
     private static final String YOUTUBE_TRAILER_URL = "http://img.youtube.com/vi/";
     private static final String URL_IMG_SUFFIX ="/0.jpg";
     private int reviewCount = 0;
+    public static String FIRST_TRAILER_URL = "";
 
     public MoviedetailAdapter(Context context, Movie movie, ArrayList<Trailer> list, ArrayList<Reviewer> reviews) {
         super(context, 0);
@@ -125,6 +126,8 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             TextView synopsis = (TextView) convertView.findViewById(R.id.trailer_synopsis);
             title.setText(trailer.getTrailer_title());
             synopsis.setText(trailer.getTrailer_synopsis());
+            if(position == 1)
+                    MoviedetailAdapter.FIRST_TRAILER_URL = trailer.getTrailer_url();
             Picasso.with(ctx)
                     .load(YOUTUBE_TRAILER_URL + trailer.getTrailer_url()+URL_IMG_SUFFIX)
                     .resize(280, 300)
