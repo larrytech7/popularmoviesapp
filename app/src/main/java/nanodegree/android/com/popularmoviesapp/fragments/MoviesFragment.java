@@ -38,7 +38,7 @@ public class MoviesFragment extends Fragment{
     private GridView moviesGridView;
     private MovieAdapter movieAdapter;
     private View rootView;
-    private static final String API_KEY = "API_KEY";
+    private static final String API_KEY = "76183055a219f7917ab7b2e71f9cada1";
     private int mPosition;
     private String SELECTED_MOVIE_POSITION;
 

@@ -12,7 +12,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
  * Created by Larry Akah on 10/21/15 11:02 PM.
  */
 @ContentProvider(authority = MovieContentProvider.AUTHORITY, database = MovieDatabase.class)
-public class MovieContentProvider {
+public final class MovieContentProvider {
     public static final String AUTHORITY = "nanodegree.android.com.popularmoviesapp.model.MovieContentProvider";
 
     static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
