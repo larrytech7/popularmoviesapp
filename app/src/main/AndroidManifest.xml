@@ -28,7 +28,7 @@
         </activity>
         <provider
             android:authorities="nanodegree.android.com.popularmoviesapp.model.MovieContentProvider"
-            android:name="nanodegree.android.com.popularmoviesapp.model.generated.MovieContentProvider"
+            android:name="nanodegree.android.com.popularmoviesapp.MovieContentProvider"
             android:exported="false"/>
     </application>
 

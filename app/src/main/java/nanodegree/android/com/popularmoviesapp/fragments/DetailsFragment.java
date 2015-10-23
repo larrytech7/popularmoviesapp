@@ -146,7 +146,7 @@ public class DetailsFragment extends Fragment {
 
     private void loadTrailerInfo(long movieid, final ListView lv, final Movie movie){
         Ion.with(getActivity())
-                .load(TRAILER_REVIEW_URL+movieid+"?api_key=76183055a219f7917ab7b2e71f9cada1&append_to_response=trailers,reviews")
+                .load(TRAILER_REVIEW_URL+movieid+"?api_key=API_KEY&append_to_response=trailers,reviews")
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
 
