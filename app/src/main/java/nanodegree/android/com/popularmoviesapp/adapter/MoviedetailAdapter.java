@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +54,14 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
         this.reviewers = reviews;
         this.movie = movie;
         this.ctx = context;
+        if(list.size()>1)
+            FIRST_TRAILER_URL = list.get(0).getTrailer_url();
+        Log.i(LOG_TAG, "Trailer url"+FIRST_TRAILER_URL);
     }
 
     @Override
     public Trailer getItem(int position) {
-        return this.trailers.get(position+1);
+        return this.trailers.get(position);
     }
 
     @Override
@@ -76,7 +78,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             TextView releaseDate = (TextView) convertView.findViewById(R.id.movieReleaseDate);
             TextView rating = (TextView) convertView.findViewById(R.id.movieRating);
             TextView overview = (TextView) convertView.findViewById(R.id.movieOverview);
-            ListView trailerListview = (ListView) convertView.findViewById(R.id.trailerListView);
+//            ListView trailerListview = (ListView) convertView.findViewById(R.id.trailerListView);
             //bind data to view
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,8 +128,6 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             TextView synopsis = (TextView) convertView.findViewById(R.id.trailer_synopsis);
             title.setText(trailer.getTrailer_title());
             synopsis.setText(trailer.getTrailer_synopsis());
-            if(position == 1)
-                    MoviedetailAdapter.FIRST_TRAILER_URL = trailer.getTrailer_url();
             Picasso.with(ctx)
                     .load(YOUTUBE_TRAILER_URL + trailer.getTrailer_url()+URL_IMG_SUFFIX)
                     .resize(280, 300)
@@ -195,6 +195,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
 
         return bitmap;
     }
+
     private byte[] getByteArrayFromDrawable( Drawable drawable){
         Bitmap bitmap = drawableToBitmap(drawable);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
