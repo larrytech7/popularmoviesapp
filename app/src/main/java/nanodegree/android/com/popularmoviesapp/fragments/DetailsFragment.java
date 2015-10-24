@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,6 +70,8 @@ public class DetailsFragment extends Fragment {
             movieToDisplay = getArguments().getParcelable(MOVIE);
         }else if(getActivity().getIntent() != null){
             movieToDisplay = getActivity().getIntent().getParcelableExtra(MOVIE);
+        }else{
+            movieToDisplay = new Movie(0,"","","",0,"");
         }
     }
 
@@ -88,7 +89,9 @@ public class DetailsFragment extends Fragment {
             }
         });
         //load the movie details alongside trailers and reviews
-        this.loadTrailerInfo(movieToDisplay.getMovie_id(), trailerListview, movieToDisplay);
+        if (movieToDisplay != null)
+            this.loadMovieDetails(movieToDisplay.getMovie_id(), trailerListview, movieToDisplay);
+
 
         return rootView;
     }
@@ -104,7 +107,7 @@ public class DetailsFragment extends Fragment {
 
                 lShareActionProvider.setShareIntent(getShareIntent("View this trailer "+YOUTUBE_URL+MoviedetailAdapter.FIRST_TRAILER_URL));
             }else{
-                Toast.makeText(getActivity(), "ShareProvider not ok", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Sharing misconfiguration", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,33 +121,17 @@ public class DetailsFragment extends Fragment {
         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         share.setType("text/*");
         share.putExtra(Intent.EXTRA_TEXT, text);
-        share.putExtra(Intent.EXTRA_HTML_TEXT, Html.fromHtml(text));
+        //share.putExtra(Intent.EXTRA_HTML_TEXT, Html.fromHtml(text));
         return share;
     }
 
-    /**
-     * This hook is called whenever an item in your options menu is selected.
-     * The default implementation simply returns false to have the normal
-     * processing happen (calling the item's Runnable or sending a message to
-     * its Handler as appropriate).  You can use this method for any items
-     * for which you would like to do processing without those other
-     * facilities.
-     * <p/>
-     * <p>Derived classes should call through to the base class for it to
-     * perform the default menu handling.
-     *
-     * @param item The menu item that was selected.
-     * @return boolean Return false to allow normal menu processing to
-     * proceed, true to consume it here.
-     * @see #onCreateOptionsMenu
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadTrailerInfo(long movieid, final ListView lv, final Movie movie){
+    private void loadMovieDetails(long movieid, final ListView lv, final Movie movie){
         Ion.with(getActivity())
                 .load(TRAILER_REVIEW_URL+movieid+"?api_key=76183055a219f7917ab7b2e71f9cada1&append_to_response=trailers,reviews")
                 .asJsonObject()
@@ -178,7 +165,10 @@ public class DetailsFragment extends Fragment {
                             moviedetailAdapter.notifyDataSetChanged();
                         }else{
                             e.printStackTrace();
-                            Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "No connection. Not loading trailers and reviews", Toast.LENGTH_LONG).show();
+                            moviedetailAdapter = new MoviedetailAdapter(getActivity(), movie, new ArrayList<Trailer>(),new ArrayList<Reviewer>() );
+                            lv.setAdapter(moviedetailAdapter);
+                            moviedetailAdapter.notifyDataSetChanged();
                         }
                     }
                 });

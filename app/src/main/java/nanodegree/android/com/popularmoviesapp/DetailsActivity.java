@@ -27,14 +27,14 @@ public class DetailsActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_details, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.menu_details, menu);
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
