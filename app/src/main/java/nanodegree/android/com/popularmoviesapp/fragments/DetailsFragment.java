@@ -83,9 +83,13 @@ public class DetailsFragment extends Fragment {
         trailerListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Trailer trailer = (Trailer) adapterView.getAdapter().getItem(i-1);
-                if(trailer != null)
-                startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(YOUTUBE_URL+trailer.getTrailer_url())));
+                try {
+                    Trailer trailer = (Trailer) adapterView.getAdapter().getItem(i-1);
+                    if(trailer != null)
+                    startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(YOUTUBE_URL+trailer.getTrailer_url())));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         //load the movie details alongside trailers and reviews
