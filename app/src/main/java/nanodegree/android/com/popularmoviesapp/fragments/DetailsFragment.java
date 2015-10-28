@@ -169,7 +169,7 @@ public class DetailsFragment extends Fragment {
                             moviedetailAdapter.notifyDataSetChanged();
                         }else{
                             e.printStackTrace();
-                            Toast.makeText(getActivity(), "No connection. Not loading trailers and reviews", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "No connection. Unable to retrieve trailers and reviews", Toast.LENGTH_LONG).show();
                             moviedetailAdapter = new MoviedetailAdapter(getActivity(), movie, new ArrayList<Trailer>(),new ArrayList<Reviewer>() );
                             lv.setAdapter(moviedetailAdapter);
                             moviedetailAdapter.notifyDataSetChanged();

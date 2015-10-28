@@ -62,14 +62,12 @@ public class FavoriteMovieAdapter extends CursorAdapter {
         }
     }
 
-    /**
-     * @see android.widget.ListAdapter#getCount()
-     *
     @Override
     public int getCount() {
         return mCursor.getCount();
     }
-*/
+
+    @Override
     public Movie getItem(int position) {
         mCursor.moveToPosition(position+1);
         return new Movie(mCursor.getLong(mCursor.getColumnIndex(MovieColumns.MOVIE_ID)),

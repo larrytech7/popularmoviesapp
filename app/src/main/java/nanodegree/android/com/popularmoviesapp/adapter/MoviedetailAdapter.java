@@ -54,7 +54,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
         this.reviewers = reviews;
         this.movie = movie;
         this.ctx = context;
-        if(list.size()>1)
+        if(list.size()>=1)
             FIRST_TRAILER_URL = list.get(0).getTrailer_url();
         Log.i(LOG_TAG, "Trailer url"+FIRST_TRAILER_URL);
     }
