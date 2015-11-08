@@ -33,7 +33,7 @@ import nanodegree.android.com.popularmoviesapp.model.MovieContentProvider;
 /**
  * Created by Larry akah on 10/14/15.
  */
-public class MoviesFragment extends Fragment{
+public class MoviesFragment extends Fragment implements View.OnClickListener{
 
     private GridView moviesGridView;
     private MovieAdapter movieAdapter;
@@ -41,9 +41,102 @@ public class MoviesFragment extends Fragment{
     private static final String API_KEY = "76183055a219f7917ab7b2e71f9cada1";
     private int mPosition;
     private String SELECTED_MOVIE_POSITION;
-
     private enum API_REQUEST {POPULARITY, RATING};
     private static final String MOVIES_API_LINK = "http://api.themoviedb.org/3/discover/movie?sort_by=";
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.fabPopular:
+                if(isNetworkAvailable())
+                    Ion.with(getActivity())
+                            .load(this.buildApiRequest(API_REQUEST.POPULARITY))
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    if( result != null) {
+                                        JsonArray movies = result.getAsJsonArray("results");
+                                        List mymovies = new ArrayList<Movie>();
+
+                                        for (JsonElement movie : movies) {
+                                            mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                                    movie.getAsJsonObject().get("poster_path").getAsString(),
+                                                    movie.getAsJsonObject().get("original_title").getAsString(),
+                                                    movie.getAsJsonObject().get("overview").getAsString(),
+                                                    movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                                    movie.getAsJsonObject().get("release_date").getAsString()));
+                                        }
+                                        movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                                        moviesGridView.setAdapter(movieAdapter);
+                                        movieAdapter.notifyDataSetChanged();
+                                    }else{
+                                        e.printStackTrace();
+                                        //connection error probably, so show favorited movies
+                                        Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                else{
+                    moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
+                            getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
+                                    null,
+                                    null,
+                                    null,
+                                    null), 0));
+                }
+                break;
+            case R.id.fabHrated:
+                if(isNetworkAvailable())
+                    Ion.with(getActivity())
+                            .load(this.buildApiRequest(API_REQUEST.RATING))
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+                                    if( result != null) {
+                                        JsonArray movies = result.getAsJsonArray("results");
+                                        List mymovies = new ArrayList<Movie>();
+
+                                        for (JsonElement movie : movies) {
+                                            mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
+                                                    movie.getAsJsonObject().get("poster_path").getAsString(),
+                                                    movie.getAsJsonObject().get("original_title").getAsString(),
+                                                    movie.getAsJsonObject().get("overview").getAsString(),
+                                                    movie.getAsJsonObject().get("vote_average").getAsFloat(),
+                                                    movie.getAsJsonObject().get("release_date").getAsString()));
+                                        }
+                                        movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
+                                        moviesGridView.setAdapter(movieAdapter);
+                                        movieAdapter.notifyDataSetChanged();
+                                    }else{
+                                        e.printStackTrace();
+                                        //connection error probably, so show favorited movies
+                                        Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                else{
+                    moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
+                            getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
+                                    null,
+                                    null,
+                                    null,
+                                    null), 0));
+                }
+                break;
+            case R.id.fabFavorites:
+                moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
+                        getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
+                                null,
+                                null,
+                                null,
+                                null), 0));
+                break;
+        }
+    }
 
     public MoviesFragment newInstance(String param1){
         Bundle dataBundle = new Bundle();
@@ -105,7 +198,9 @@ public class MoviesFragment extends Fragment{
                             null,
                             null), 0));
         }
-
+        rootView.findViewById(R.id.fabFavorites).setOnClickListener(this);
+        rootView.findViewById(R.id.fabHrated).setOnClickListener(this);
+        rootView.findViewById(R.id.fabPopular).setOnClickListener(this);
 
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -138,78 +233,6 @@ public class MoviesFragment extends Fragment{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.mrated:
-                Ion.with(getActivity())
-                        .load(this.buildApiRequest(API_REQUEST.RATING))
-                        .asJsonObject()
-                        .setCallback(new FutureCallback<JsonObject>() {
-
-                            @Override
-                            public void onCompleted(Exception e, JsonObject result) {
-                                if(result != null) {
-                                    JsonArray movies = result.getAsJsonArray("results");
-                                    List mymovies = new ArrayList<Movie>();
-
-                                    for (JsonElement movie : movies) {
-                                        mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
-                                                movie.getAsJsonObject().get("poster_path").getAsString(),
-                                                movie.getAsJsonObject().get("original_title").getAsString(),
-                                                movie.getAsJsonObject().get("overview").getAsString(),
-                                                movie.getAsJsonObject().get("vote_average").getAsFloat(),
-                                                movie.getAsJsonObject().get("release_date").getAsString()));
-                                    }
-                                    movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
-                                    moviesGridView.setAdapter(movieAdapter);
-
-                                    movieAdapter.notifyDataSetChanged();
-                                }else{
-                                    //e.printStackTrace();
-                                    Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                return true;
-            case R.id.mpopular:
-                Ion.with(getActivity())
-                        .load(this.buildApiRequest(API_REQUEST.POPULARITY))
-                        .asJsonObject()
-                        .setCallback(new FutureCallback<JsonObject>() {
-
-                            @Override
-                            public void onCompleted(Exception e, JsonObject result) {
-                                if(result != null) {
-                                    JsonArray movies = result.getAsJsonArray("results");
-                                    List mymovies = new ArrayList<Movie>();
-
-                                    for (JsonElement movie : movies) {
-                                        mymovies.add(new Movie(movie.getAsJsonObject().get("id").getAsLong(),
-                                                movie.getAsJsonObject().get("poster_path").getAsString(),
-                                                movie.getAsJsonObject().get("original_title").getAsString(),
-                                                movie.getAsJsonObject().get("overview").getAsString(),
-                                                movie.getAsJsonObject().get("vote_average").getAsFloat(),
-                                                movie.getAsJsonObject().get("release_date").getAsString()));
-                                    }
-                                    movieAdapter = new MovieAdapter(getActivity(), (ArrayList<Movie>) mymovies);
-                                    moviesGridView.setAdapter(movieAdapter);
-                                    movieAdapter.notifyDataSetChanged();
-                                }else{
-                                    e.printStackTrace();
-                                    Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                return true;
-            case R.id.favorited:
-                //fetch favorite movies from database and update the adapter
-                moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
-                        getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
-                        null,
-                        null,
-                        null,
-                        null), 0));
-                return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
