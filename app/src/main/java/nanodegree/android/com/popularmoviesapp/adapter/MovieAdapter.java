@@ -48,7 +48,7 @@ public class MovieAdapter extends ArrayAdapter<Movie>{
         ImageView imageposter = (ImageView) convertView.findViewById(R.id.movie_poster);
         Picasso.with(this.datacontext)
                 .load(POSTER_URL + movie.getMovie_poster_url())
-                .resize(280, 300)
+                .resize(400, 400)
                 .placeholder(R.drawable.imageloading)
                 .error(R.mipmap.err_image)
                 .into(imageposter);
