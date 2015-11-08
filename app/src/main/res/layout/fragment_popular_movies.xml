@@ -75,7 +75,7 @@
         fab:menu_labels_position="left"
         fab:menu_openDirection="up"
         fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_fab_label="Click 2 close" >
+        fab:menu_fab_label="Close" >
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fabPopular"

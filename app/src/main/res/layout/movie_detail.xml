@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -53,13 +54,22 @@
                 android:layout_height="wrap_content"
                 android:text="New Text"
                 android:id="@+id/movieRating" />
-
-            <ImageButton
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/favoriteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/favoriteButton"
-                android:src="@android:drawable/star_off"
-                android:background="#eee" />
+                android:src="@android:drawable/btn_star_big_off"
+                android:layout_gravity="center"
+                app:fab_colorNormal="@color/accent_material_dark"
+                app:fab_colorPressed="#E75043"
+                app:fab_colorRipple="#9999FF"
+                app:fab_showShadow="true"
+                app:fab_shadowColor="#ffffff"
+                app:fab_shadowRadius="4dp"
+                app:fab_shadowXOffset="1dp"
+                app:fab_shadowYOffset="3dp"
+                app:fab_size="normal"/>
+
         </LinearLayout>
     </LinearLayout>
 

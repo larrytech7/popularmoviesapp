@@ -14,11 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -72,7 +72,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
         if(position == 0){
             convertView = LayoutInflater.from(ctx).inflate(R.layout.movie_detail, parent,false);
             //view items
-            final ImageButton favoriteButton = (ImageButton) convertView.findViewById(R.id.favoriteButton);
+            final FloatingActionButton favoriteButton = (FloatingActionButton) convertView.findViewById(R.id.favoriteButton);
             TextView titleTextView = (TextView) convertView.findViewById(R.id.movieTitleTextview);
             final ImageView posterimg = (ImageView) convertView.findViewById(R.id.moviePosterImage);
             TextView releaseDate = (TextView) convertView.findViewById(R.id.movieReleaseDate);
