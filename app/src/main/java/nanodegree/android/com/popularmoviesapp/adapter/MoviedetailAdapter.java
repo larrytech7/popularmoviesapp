@@ -85,7 +85,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
                 public void onClick(View view) {
                     try {
                         if (insertMovie(movie, getByteArrayFromDrawable(posterimg.getDrawable())))
-                            favoriteButton.setImageResource(android.R.drawable.star_on);
+                            favoriteButton.setImageResource(R.drawable.ic_favorite_active);
                         Toast.makeText(ctx, "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
 
                     }catch (SQLiteConstraintException sqle){

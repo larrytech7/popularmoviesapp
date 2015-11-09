@@ -58,7 +58,7 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/btn_star_big_off"
+                android:src="@drawable/ic_favorite"
                 android:layout_gravity="center"
                 app:fab_colorNormal="@color/accent_material_dark"
                 app:fab_colorPressed="#E75043"
