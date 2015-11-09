@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,11 +44,15 @@ public class MoviesFragment extends Fragment implements View.OnClickListener{
     private String SELECTED_MOVIE_POSITION;
     private enum API_REQUEST {POPULARITY, RATING};
     private static final String MOVIES_API_LINK = "http://api.themoviedb.org/3/discover/movie?sort_by=";
+    private FloatingActionButton fabFavorite, fabPopular, fabRated;
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.fabPopular:
+                fabPopular.setIndeterminate(true);
+                fabFavorite.setIndeterminate(false);
+                fabRated.setIndeterminate(false);
                 if(isNetworkAvailable())
                     Ion.with(getActivity())
                             .load(this.buildApiRequest(API_REQUEST.POPULARITY))
@@ -79,15 +84,13 @@ public class MoviesFragment extends Fragment implements View.OnClickListener{
                                 }
                             });
                 else{
-                    moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
-                            getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
-                                    null,
-                                    null,
-                                    null,
-                                    null), 0));
+                    Toast.makeText(getActivity(), "No internet Connection. Connectivity is required for this operation", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.fabHrated:
+                fabPopular.setIndeterminate(false);
+                fabFavorite.setIndeterminate(false);
+                fabRated.setIndeterminate(true);
                 if(isNetworkAvailable())
                     Ion.with(getActivity())
                             .load(this.buildApiRequest(API_REQUEST.RATING))
@@ -119,15 +122,13 @@ public class MoviesFragment extends Fragment implements View.OnClickListener{
                                 }
                             });
                 else{
-                    moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
-                            getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
-                                    null,
-                                    null,
-                                    null,
-                                    null), 0));
+                    Toast.makeText(getActivity(), "No internet Connection. Connectivity is required for this operation", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.fabFavorites:
+                fabFavorite.setIndeterminate(true);
+                fabPopular.setIndeterminate(false);
+                fabRated.setIndeterminate(false);
                 moviesGridView.setAdapter(new FavoriteMovieAdapter(getActivity(),
                         getActivity().getContentResolver().query(MovieContentProvider.Movies.CONTENT_URI,
                                 null,
@@ -160,6 +161,10 @@ public class MoviesFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_popular_movies, container, false);
         moviesGridView = (GridView) rootView.findViewById(R.id.moviesGridView);
+        fabFavorite = (FloatingActionButton) rootView.findViewById(R.id.fabFavorites); fabFavorite.setOnClickListener(this);
+        fabRated = (FloatingActionButton) rootView.findViewById(R.id.fabHrated); fabRated.setOnClickListener(this);
+        fabPopular = (FloatingActionButton) rootView.findViewById(R.id.fabPopular); fabPopular.setOnClickListener(this);
+
         if(isNetworkAvailable())
         Ion.with(getActivity())
                 .load(this.buildApiRequest(API_REQUEST.POPULARITY))
@@ -198,9 +203,6 @@ public class MoviesFragment extends Fragment implements View.OnClickListener{
                             null,
                             null), 0));
         }
-        rootView.findViewById(R.id.fabFavorites).setOnClickListener(this);
-        rootView.findViewById(R.id.fabHrated).setOnClickListener(this);
-        rootView.findViewById(R.id.fabPopular).setOnClickListener(this);
 
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
