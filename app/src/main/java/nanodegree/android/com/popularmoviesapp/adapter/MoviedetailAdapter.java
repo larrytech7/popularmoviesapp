@@ -19,6 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.ErrorReason;
+import com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener;
+import com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener;
+import com.google.android.youtube.player.YouTubePlayer.Provider;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -36,7 +46,7 @@ import nanodegree.android.com.popularmoviesapp.model.Trailer;
  * Project Popularmoviesapp
  * Created by Larry Akah on 10/17/15 1:54 PM.
  */
-public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
+public class MoviedetailAdapter extends ArrayAdapter<Trailer> implements YouTubePlayer.OnInitializedListener {
 
     private static final String LOG_TAG = MoviedetailAdapter.class.getName();
     private List<Trailer> trailers;
@@ -47,6 +57,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
     private static final String URL_IMG_SUFFIX ="/0.jpg";
     private int reviewCount = 0;
     public static String FIRST_TRAILER_URL = "";
+    public static final String DEVELOPER_KEY = "AIzaSyB9yk5EN1AfcvJjggqCNiaWRfPJCwTntfw";
 
     public MoviedetailAdapter(Context context, Movie movie, ArrayList<Trailer> list, ArrayList<Reviewer> reviews) {
         super(context, 0);
@@ -85,7 +96,7 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
                 public void onClick(View view) {
                     try {
                         if (insertMovie(movie, getByteArrayFromDrawable(posterimg.getDrawable())))
-                            favoriteButton.setImageResource(R.drawable.ic_favorite_active);
+                            favoriteButton.setImageResource(R.drawable.ic_favorite_red_900_18dp);
                         Toast.makeText(ctx, "This movie has been marked as favorite", Toast.LENGTH_LONG).show();
 
                     }catch (SQLiteConstraintException sqle){
@@ -126,11 +137,15 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
             Trailer trailer = this.trailers.get(position-1);
             TextView title = (TextView) convertView.findViewById(R.id.trailer_title);
             TextView synopsis = (TextView) convertView.findViewById(R.id.trailer_synopsis);
+           // YouTubePlayerView youTubePlayer = (YouTubePlayerView) convertView.findViewById(R.id.youtube_player);
             title.setText(trailer.getTrailer_title());
             synopsis.setText(trailer.getTrailer_synopsis());
+            //load youtube view here instead of trailer image
+           // youTubePlayer.initialize(DEVELOPER_KEY, this);
+            //load trailer preview image
             Picasso.with(ctx)
                     .load(YOUTUBE_TRAILER_URL + trailer.getTrailer_url()+URL_IMG_SUFFIX)
-                    .resize(280, 300)
+                    .resize(400, 300)
                     .placeholder(R.drawable.imageloading)
                     .error(R.mipmap.err_image)
                     .into((ImageView) convertView.findViewById(R.id.trailer_preview));
@@ -202,4 +217,71 @@ public class MoviedetailAdapter extends ArrayAdapter<Trailer> {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        youTubePlayer.setPlayerStateChangeListener(playerStateChangeListener);
+        youTubePlayer.setPlaybackEventListener(playbackEventListener);
+
+        /** Start buffering **/
+        if (!b) {
+            youTubePlayer.cueVideo("dKLftgvYsVU");
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        Toast.makeText(getContext(), "Failured to Initialize!", Toast.LENGTH_LONG).show();
+    }
+
+    private PlaybackEventListener playbackEventListener = new PlaybackEventListener() {
+
+        @Override
+        public void onBuffering(boolean arg0) {
+        }
+
+        @Override
+        public void onPaused() {
+        }
+
+        @Override
+        public void onPlaying() {
+        }
+
+        @Override
+        public void onSeekTo(int arg0) {
+        }
+
+        @Override
+        public void onStopped() {
+        }
+
+    };
+
+    private PlayerStateChangeListener playerStateChangeListener = new PlayerStateChangeListener() {
+
+        @Override
+        public void onAdStarted() {
+        }
+
+        @Override
+        public void onError(ErrorReason arg0) {
+        }
+
+        @Override
+        public void onLoaded(String arg0) {
+        }
+
+        @Override
+        public void onLoading() {
+        }
+
+        @Override
+        public void onVideoEnded() {
+        }
+
+        @Override
+        public void onVideoStarted() {
+        }
+    };
 }

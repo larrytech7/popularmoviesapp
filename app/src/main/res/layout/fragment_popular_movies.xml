@@ -15,22 +15,6 @@
     android:padding="0dp"
     android:useDefaultMargins="true">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchTextview"
-        android:layout_row="15"
-        android:layout_column="5"
-        android:editable="true"
-        android:focusable="true"
-        android:hint="@string/searchtext"
-        android:lines="1"
-        android:enabled="true"
-        android:focusableInTouchMode="true"
-        android:singleLine="true"
-        android:drawableRight="@android:drawable/ic_menu_search"
-        android:clickable="true" />
-
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,7 +24,8 @@
         android:numColumns="auto_fit"
         android:layout_columnSpan="1"
         android:layout_rowSpan="1"
-        android:layout_rowWeight="1"
+        android:stretchMode="columnWidth"
+
         android:background="#ddd"
         android:fastScrollEnabled="true"
         android:verticalSpacing="1dp"
@@ -65,7 +50,7 @@
         fab:menu_colorPressed="#1E88E5"
         fab:menu_colorRipple="#99ddFF"
         fab:menu_animationDelayPerItem="50"
-        fab:menu_icon="@android:drawable/ic_menu_sort_by_size"
+        fab:menu_icon="@drawable/fab_add"
         fab:menu_labels_textColor="#1E88E5"
         fab:menu_labels_textSize="14sp"
         fab:menu_labels_cornerRadius="3dp"
